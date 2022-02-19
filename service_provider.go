@@ -6,7 +6,8 @@ import (
 )
 
 type ServiceProvider struct {
-	app contracts.Application
+	app             contracts.Application
+	ServiceRegister func(service micro.Service)
 }
 
 func (s *ServiceProvider) Register(application contracts.Application) {
@@ -47,6 +48,9 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 
 func (s *ServiceProvider) Start() error {
 	return s.app.Call(func(service micro.Service) error {
+
+		s.ServiceRegister(service)
+		
 		return service.Run()
 	})[0].(error)
 }
