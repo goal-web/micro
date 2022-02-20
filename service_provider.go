@@ -18,8 +18,8 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 	application.Singleton("micro", func(config contracts.Config) micro.Service {
 		var (
 			microConfig = config.Get("micro").(Config)
-			service     = micro.NewService(micro.HandleSignal(microConfig.Signal))
-			options     = microConfig.CustomOptions
+			service     = micro.NewService()
+			options     = append(microConfig.CustomOptions, micro.HandleSignal(microConfig.Signal))
 		)
 		if microConfig.Registry != nil {
 			options = append(options, micro.Registry(microConfig.Registry))
