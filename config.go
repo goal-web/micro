@@ -1,7 +1,8 @@
 package micro
 
-import (
-	"go-micro.dev/v4"
-)
+import "go-micro.dev/v4"
 
-type Config micro.Options
+type Config struct {
+	micro.Options
+	CustomOptions []micro.Option
+}

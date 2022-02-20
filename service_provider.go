@@ -1,8 +1,11 @@
 package micro
 
 import (
+	"fmt"
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/logs"
 	"go-micro.dev/v4"
+	"runtime/debug"
 )
 
 type ServiceProvider struct {
@@ -15,23 +18,59 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 	application.Singleton("micro", func(config contracts.Config) micro.Service {
 		var (
 			microConfig = config.Get("micro").(Config)
-			service     = micro.NewService(
-				micro.Registry(microConfig.Registry),
-				micro.Auth(microConfig.Auth),
-				micro.Broker(microConfig.Broker),
-				micro.Cmd(microConfig.Cmd),
-				micro.Config(microConfig.Config),
-				micro.Client(microConfig.Client),
-				micro.Server(microConfig.Server),
-				micro.Store(microConfig.Store),
-				micro.Runtime(microConfig.Runtime),
-				micro.Transport(microConfig.Transport),
-				micro.Profile(microConfig.Profile),
-				micro.Context(microConfig.Context),
-				micro.HandleSignal(microConfig.Signal),
-			)
-			options = make([]micro.Option, 0)
+			service     = micro.NewService(micro.HandleSignal(microConfig.Signal))
+			options     = microConfig.CustomOptions
 		)
+		if microConfig.Registry != nil {
+			options = append(options, micro.Registry(microConfig.Registry))
+		}
+
+		if microConfig.Auth != nil {
+			options = append(options, micro.Auth(microConfig.Auth))
+		}
+
+		if microConfig.Broker != nil {
+			options = append(options, micro.Broker(microConfig.Broker))
+		}
+
+		if microConfig.Cmd != nil {
+			options = append(options, micro.Cmd(microConfig.Cmd))
+		}
+
+		if microConfig.Config != nil {
+			options = append(options, micro.Config(microConfig.Config))
+		}
+
+		if microConfig.Client != nil {
+			options = append(options, micro.Client(microConfig.Client))
+		}
+
+		if microConfig.Server != nil {
+			options = append(options, micro.Server(microConfig.Server))
+		}
+
+		if microConfig.Store != nil {
+			options = append(options, micro.Store(microConfig.Store))
+		}
+
+		if microConfig.Client != nil {
+			options = append(options, micro.Client(microConfig.Client))
+		}
+
+		if microConfig.Runtime != nil {
+			options = append(options, micro.Runtime(microConfig.Runtime))
+		}
+
+		if microConfig.Transport != nil {
+			options = append(options, micro.Transport(microConfig.Transport))
+		}
+
+		if microConfig.Profile != nil {
+			options = append(options, micro.Profile(microConfig.Profile))
+		}
+		if microConfig.Context != nil {
+			options = append(options, micro.Context(microConfig.Context))
+		}
 
 		for _, handler := range microConfig.BeforeStart {
 			options = append(options, micro.BeforeStart(handler))
@@ -47,8 +86,15 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 }
 
 func (s *ServiceProvider) Start() error {
+	defer func() {
+		if err, ok := recover().(error); ok && err != nil {
+			logs.WithError(err).Error("micro.ServiceProvider.Start: micro service start failed")
+			debug.PrintStack()
+			s.app.Stop()
+		}
+	}()
 	return s.app.Call(func(service micro.Service) error {
-
+		fmt.Println(service, s.app)
 		if err := s.ServiceRegister(service); err != nil {
 			defer s.app.Stop()
 			return err
