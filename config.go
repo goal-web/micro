@@ -1,7 +1,7 @@
 package micro
 
 import (
-	"github.com/micro/go-micro/v2"
+	"go-micro.dev/v4"
 )
 
 type Config micro.Options

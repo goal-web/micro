@@ -2,12 +2,12 @@ package micro
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/micro/go-micro/v2"
+	"go-micro.dev/v4"
 )
 
 type ServiceProvider struct {
 	app             contracts.Application
-	ServiceRegister func(service micro.Service)
+	ServiceRegister func(service micro.Service) error
 }
 
 func (s *ServiceProvider) Register(application contracts.Application) {
@@ -49,8 +49,11 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 func (s *ServiceProvider) Start() error {
 	return s.app.Call(func(service micro.Service) error {
 
-		s.ServiceRegister(service)
-		
+		if err := s.ServiceRegister(service); err != nil {
+			defer s.app.Stop()
+			return err
+		}
+
 		return service.Run()
 	})[0].(error)
 }
