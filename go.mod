@@ -1,9 +1,9 @@
 module github.com/goal-web/micro
 
-go 1.17
+go 1.19
 
 require (
-	github.com/goal-web/contracts v0.1.49
+	github.com/goal-web/contracts v0.1.62
 	github.com/goal-web/supports v0.1.18
 	go-micro.dev/v4 v4.6.0
 )

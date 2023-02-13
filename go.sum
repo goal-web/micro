@@ -179,9 +179,9 @@ github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
 github.com/go-resty/resty/v2 v2.1.1-0.20191201195748-d7b97669fe48/go.mod h1:dZGr0i9PLlaaTD4H/hoZIDjQ+r6xq8mgbRzHZf7f2J8=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
-github.com/goal-web/contracts v0.1.46/go.mod h1:lKHynU2Kgk6xyxL4afOJM4TO1kSa3RrCJ2bm5RtFMBw=
-github.com/goal-web/contracts v0.1.49 h1:LMGh8aF0npJ0+UpHGRd0gmoZ7Evs3qFt6sS/OK8+LdI=
-github.com/goal-web/contracts v0.1.49/go.mod h1:lKHynU2Kgk6xyxL4afOJM4TO1kSa3RrCJ2bm5RtFMBw=
+github.com/goal-web/contracts v0.1.62.46/go.mod h1:lKHynU2Kgk6xyxL4afOJM4TO1kSa3RrCJ2bm5RtFMBw=
+github.com/goal-web/contracts v0.1.62.49 h1:LMGh8aF0npJ0+UpHGRd0gmoZ7Evs3qFt6sS/OK8+LdI=
+github.com/goal-web/contracts v0.1.62.49/go.mod h1:lKHynU2Kgk6xyxL4afOJM4TO1kSa3RrCJ2bm5RtFMBw=
 github.com/goal-web/supports v0.1.18 h1:R5luXvmPXIzoFR64zOr7OWTsPizQ8K0c0zYUh8TaD44=
 github.com/goal-web/supports v0.1.18/go.mod h1:YJr7ostl2k0mFpdhu+AyKGWQkw58xQ0bpuqlq2Y7tCQ=
 github.com/gobs/pretty v0.0.0-20180724170744-09732c25a95b/go.mod h1:Xo4aNUOrJnVruqWQJBtW6+bTBDTniY8yZum5rF3b5jw=
