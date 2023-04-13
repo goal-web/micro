@@ -1,20 +1,19 @@
 package micro
 
 import (
-	"fmt"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/logs"
 	"go-micro.dev/v4"
-	"runtime/debug"
 )
 
 type ServiceProvider struct {
 	app             contracts.Application
 	ServiceRegister func(service micro.Service) error
+	service         micro.Service
 }
 
-func (s *ServiceProvider) Register(application contracts.Application) {
-	s.app = application
+func (provider *ServiceProvider) Register(application contracts.Application) {
+	provider.app = application
 	application.Singleton("micro", func(config contracts.Config) micro.Service {
 		var (
 			microConfig = config.Get("micro").(Config)
@@ -85,25 +84,29 @@ func (s *ServiceProvider) Register(application contracts.Application) {
 	})
 }
 
-func (s *ServiceProvider) Start() error {
-	defer func() {
-		if err, ok := recover().(error); ok && err != nil {
-			logs.WithError(err).Error("micro.ServiceProvider.Start: micro service start failed")
-			debug.PrintStack()
-			s.app.Stop()
-		}
-	}()
-	return s.app.Call(func(service micro.Service) error {
-		fmt.Println(service, s.app)
-		if err := s.ServiceRegister(service); err != nil {
-			defer s.app.Stop()
-			return err
+func (provider *ServiceProvider) Start() (err error) {
+	provider.app.Call(func(service micro.Service) {
+		provider.service = service
+		if err = provider.ServiceRegister(service); err != nil {
+			return
 		}
 
-		return service.Run()
-	})[0].(error)
+		err = service.Server().Start()
+	})
+
+	if err != nil {
+		logs.WithError(err).Error("micro.ServiceProvider.Start: micro server start failed")
+		go func() { provider.app.Stop() }()
+	}
+
+	return err
 }
 
-func (s *ServiceProvider) Stop() {
-
+func (provider *ServiceProvider) Stop() {
+	if provider.service != nil {
+		err := provider.service.Server().Stop()
+		if err != nil {
+			logs.WithError(err).Error("micro service closed")
+		}
+	}
 }
