@@ -1,6 +1,6 @@
 module github.com/goal-web/micro
 
-go 1.20
+go 1.23.1
 
 require (
 	go-micro.dev/v4 v4.10.2
